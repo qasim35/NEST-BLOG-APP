@@ -1,41 +1,43 @@
 //nest generate service //command to create service using nest cli
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { CreateBlogDto } from './dto/create-blog.dto';
+import { UpdateBlogDto } from './dto/update-blog.dto';
 import { Blog } from './entities/blogs.entity';
 
 @Injectable()
 export class BlogsService {
-    private blogs: Blog[] =[
-        {
-            id: 1,
-            name:'History Blog',
-            subject: 'this blog is about history',
-            blogDetail: 'this blog provides a brief history of the generations existed in the passed times',
-            tags: ['history','waar','tour']
-        }
-    ];
+   constructor(
+    @InjectRepository(Blog) 
+    private readonly blogRepository : Repository<Blog>
+   ){}
     findAll(){
-        return this.blogs
+        return this.blogRepository.find()
     };
-    findOne(id:string){
-        const blogs =  this.blogs.find(item => item.id === +id)
+   async findOne(id: string){
+        const blogs = await this.findOne(id)
         if(! blogs){
             throw new HttpException(`No blog with id: ${id}`,HttpStatus.NOT_FOUND)
         }
+        return this.blogRepository.getId(blogs)
     };
-    create(CreateBlogDto: any){
-        this.blogs.push(CreateBlogDto);
-        return CreateBlogDto
+    create(CreateBlogDto: CreateBlogDto){
+        const blogs = this.blogRepository.create(CreateBlogDto);
+        return this.blogRepository.save(blogs)
     }
-    update(id:string, createBlogData:any){
-        const existingBlog = this.findOne(id)
-        // if(existingBlog){
-        //     //update the blog
-        // }
+    async update(id:string, updateBlogDto: UpdateBlogDto){
+       const blogs = await this.blogRepository.preload({
+        id: +id,
+        ...updateBlogDto
+       })
+       if(! blogs){
+        throw new NotFoundException(`blog with ${id} not found`)
+       }
+       return this.blogRepository.save(blogs)
     };
-    remove(id:string){
-        const blogIndex = this.blogs.findIndex(item => item.id === +id);
-        if(blogIndex >= 0){
-            this.blogs.splice(blogIndex, 1)
-        }
+   async remove(id:string){
+        const blogs = await this.findOne(id)
+        return this.blogRepository.remove(blogs)
     }
 }
