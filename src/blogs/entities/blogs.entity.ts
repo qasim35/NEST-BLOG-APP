@@ -1,5 +1,7 @@
-import { Entity,Column,PrimaryGeneratedColumn } from "typeorm";
-@Entity('BLOGS') //table name in the ''
+
+import { Entity,Column,PrimaryGeneratedColumn, JoinTable, ManyToMany } from "typeorm";
+import { Comment } from "./comment.entity";
+@Entity() //table name in the ''
 export class Blog {
     @PrimaryGeneratedColumn()
     id: number;
@@ -9,6 +11,9 @@ export class Blog {
     subject: string;
     @Column()
     blogDetail: string;
-    @Column('json',{nullable: true})
-    tags: string[]
+    @JoinTable()
+    @ManyToMany(type => Comment,
+        comment => comment.blogs
+        )
+    comment: string[]
 }

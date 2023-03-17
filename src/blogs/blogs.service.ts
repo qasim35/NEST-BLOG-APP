@@ -16,11 +16,11 @@ export class BlogsService {
         return this.blogRepository.find()
     };
    async findOne(id: string){
-        const blogs = await this.findOne(id)
+        const blogs = await this.blogRepository.findOne({where: {id: parseInt(id, 10)}})
         if(! blogs){
             throw new HttpException(`No blog with id: ${id}`,HttpStatus.NOT_FOUND)
         }
-        return this.blogRepository.getId(blogs)
+        return blogs
     };
     create(CreateBlogDto: CreateBlogDto){
         const blogs = this.blogRepository.create(CreateBlogDto);
