@@ -7,5 +7,5 @@ export class CreateBlogDto {
    @IsString()
    readonly blogDetail: string;
    @IsString({each: true}) //expected value is an array of string
-   readonly tags: string[]
+   readonly comments: string[]
 }

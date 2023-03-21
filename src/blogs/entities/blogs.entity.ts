@@ -11,9 +11,16 @@ export class Blog {
     subject: string;
     @Column()
     blogDetail: string;
+
+    @Column({default: 0})
+    recomendations: number
+    
     @JoinTable()
     @ManyToMany(type => Comment,
-        comment => comment.blogs
+        comment => comment.blogs,
+        {
+            cascade: true //any comments with any blogs added to db
+        }
         )
-    comment: string[]
+    comment: Comment[];
 }

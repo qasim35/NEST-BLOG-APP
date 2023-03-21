@@ -6,9 +6,9 @@ export class Comment {
     id: number
     
     @Column()
-    comment: string
+    comments: string
 
-    @ManyToMany(type => Blog,
+    @ManyToMany(type => Blog, //many to many relation 
         blogs => blogs.comment
  )
  blogs: Blog[]

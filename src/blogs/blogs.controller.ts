@@ -1,19 +1,24 @@
 //nest generate controller //command to create controller using nest cli
-import { Controller,Get,Param,Post,Body, HttpCode, HttpStatus, Res, Patch, Delete, Query } from '@nestjs/common';
+import { Controller,Get,Param,Post,Body, HttpCode, HttpStatus, Res, Patch, Delete, Query, ValidationPipe } from '@nestjs/common';
+import { Public } from 'src/common/decorators/public.decorator';
+import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
 import { BlogsService } from './blogs.service';
 import { CreateBlogDto } from './dto/create-blog.dto';
 import { UpdateBlogDto } from './dto/update-blog.dto';
 @Controller('blogs')
 export class BlogsController {
     //Constructor to inject blogs servce using provider
-    constructor(private readonly blogsService: BlogsService){}
+    constructor(private readonly blogsService: BlogsService){
+        console.log("blogs controller created")
+    }
     //GET http handler to get all the blogs
     //GET decorator to get blogs
+    @Public() //make the route public
     @Get('all') //nasted route to get all blogs
     //get all blogs
     // findAll(@Res()response,@Query()paginationQuery)
-    findAll(){
-       return this.blogsService.findAll()
+    findAll(@Query() paginationQuery : PaginationQueryDto){
+       return this.blogsService.findAll(paginationQuery)
 //         const {limit,offset} = paginationQuery //object destructuring
 // response.status(200).send( `All blogs are here limit: ${limit} offset: ${offset}`)
     }
@@ -44,7 +49,8 @@ export class BlogsController {
     //  response.status(200).send(`Blog updated successfully with id ${id}`)
 
     // }
-    update(@Param('id')id:string,@Body()UpdateBlogDto: UpdateBlogDto){
+    //parameter based validation pipe only for update route body
+    update(@Param('id')id:string,@Body(ValidationPipe)UpdateBlogDto: UpdateBlogDto){
         return this.blogsService.update(id,UpdateBlogDto)
     }
     //delete a blog
