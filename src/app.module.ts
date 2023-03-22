@@ -7,6 +7,7 @@ import { dataSourceOptions } from 'db/data-source';
 import { ConfigModule } from '@nestjs/config';
 import * as Joi from '@hapi/joi';
 import appconfig from 'config/appconfig';
+import { CommonModule } from './common/common.module';
 
 
 @Module({
@@ -34,6 +35,7 @@ import appconfig from 'config/appconfig';
       load: [appconfig]
     }),
     BlogsModule, 
+    CommonModule
     
 ],
   controllers: [AppController],//if not remove the blogcontroller it would be instanciated twice

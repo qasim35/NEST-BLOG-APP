@@ -1,34 +1,39 @@
 //nest generate controller //command to create controller using nest cli
-import { Controller,Get,Param,Post,Body, HttpCode, HttpStatus, Res, Patch, Delete, Query, ValidationPipe } from '@nestjs/common';
+import { Controller,Get,Param,Post,Body, HttpCode, HttpStatus, Res, Patch, Delete, Query, ValidationPipe, UseInterceptors } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+import { Protocol } from 'src/common/decorators/protocol.decorator';
 import { Public } from 'src/common/decorators/public.decorator';
 import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
+import { ParseIntPipe } from 'src/common/pipes/parse-int.pipe';
 import { BlogsService } from './blogs.service';
 import { CreateBlogDto } from './dto/create-blog.dto';
 import { UpdateBlogDto } from './dto/update-blog.dto';
+@ApiTags('blogs')
 @Controller('blogs')
+
 export class BlogsController {
     //Constructor to inject blogs servce using provider
     constructor(private readonly blogsService: BlogsService){
-        console.log("blogs controller created")
     }
     //GET http handler to get all the blogs
     //GET decorator to get blogs
+
     @Public() //make the route public
     @Get('all') //nasted route to get all blogs
     //get all blogs
     // findAll(@Res()response,@Query()paginationQuery)
-    findAll(@Query() paginationQuery : PaginationQueryDto){
+    async findAll(@Protocol() protocol:string, //custom pipe 
+    @Query() paginationQuery : PaginationQueryDto){
+        console.log(protocol)
        return this.blogsService.findAll(paginationQuery)
 //         const {limit,offset} = paginationQuery //object destructuring
 // response.status(200).send( `All blogs are here limit: ${limit} offset: ${offset}`)
     }
     //get blog by ID
+    @Public()
     @Get(':id') //nasted route id to get blog with a specfic id
-    //geting a specfic blog through id using the param decorator
-    // findOne(@Param('id')id:string){
-    //     return `get blog by specfic id  ${id}`
-   // }
-   findOne(@Param('id')id:string){
+   findOne(@Param('id',ParseIntPipe)id:string){
+   console.log(id);
     return this.blogsService.findOne(id)
    }
     //create/post a blog
