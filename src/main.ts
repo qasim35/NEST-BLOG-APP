@@ -9,7 +9,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(
     new ValidationPipe({
-    whitelist: true, //specify the properties you want to process and filter unwanted feilds
+    whitelist: false, //specify the properties you want to process and filter unwanted feilds
     forbidNonWhitelisted: true, //stops the execution and throws error if any unwanted feilds are present
     transform: true, //convert all the input to class instance
     transformOptions:{
