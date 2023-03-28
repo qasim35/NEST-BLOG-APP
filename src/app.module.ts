@@ -7,7 +7,7 @@ import { dataSourceOptions } from 'db/data-source';
 import { ConfigModule } from '@nestjs/config';
 import * as Joi from '@hapi/joi';
 import appconfig from 'config/appconfig';
-import { CommonModule } from './common/common.module';
+//import { CommonModule } from './common/common.module';
 import { UserModule } from './users/users.module';
 import { PassportModule } from '@nestjs/passport';
 import { LocalStrategy } from './auth/local.Strategy';
@@ -17,18 +17,7 @@ import { Blog } from './blogs/entities/blogs.entity';
   imports: [
     TypeOrmModule.forRootAsync({
       //configration loaded after every module
-      useFactory:()=>({
-        type: 'postgres',
-        host: process.env.DATABASE_HOST,
-        port: +process.env.DATABASE_PORT,
-        username: process.env.DATABASE_USER,
-        password: process.env.DATABASE_PASSWORD,
-        database: process.env.DATABASE_NAME,
-        entities:[Blog],
-        autoLoadEntities: true,
-        synchronize: true   //must be false in production environment
-
-      })
+      useFactory:()=>(dataSourceOptions)
      
     }),
     ConfigModule.forRoot({
@@ -39,7 +28,7 @@ import { Blog } from './blogs/entities/blogs.entity';
       load: [appconfig]
     }),
     BlogsModule, 
-    CommonModule,
+   // CommonModule,
     UserModule,
     
     

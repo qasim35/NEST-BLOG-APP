@@ -45,4 +45,8 @@ export class UsersService {
         const blogs = await this.findOne(id)
         return this.userRepository.remove(blogs)
     };
+    async getUserByEmail(email: string) {
+        const user = await this.userRepository. findOne({where:{email}})
+        console.log(user)
+    }
 }

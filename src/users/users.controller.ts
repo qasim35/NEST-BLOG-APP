@@ -41,7 +41,8 @@ export class UsersController {
 
     // };
     //simple dto (data transfer object) to create blog //only if we dont have a real database
-    create(@Body()CreateUserDto: CreateUserDto){
+    async create(@Body()CreateUserDto: CreateUserDto){
+        await CreateUserDto.setPassword(CreateUserDto.password)
        return this.usersService.create(CreateUserDto) //dto to pass any type of payload
     }
     //update a blog

@@ -1,11 +1,11 @@
-import { Injectable, NestMiddleware } from "@nestjs/common";
+// import { Injectable, NestMiddleware } from "@nestjs/common";
 
-@Injectable()
-export class LoggingMiddleware implements NestMiddleware{
-    use(req: any, res: any, next: (error?: any) => void) {
-        console.time("request-response-time")
-        console.log("hi from middleware")
-        res.on('finish',()=> console.timeEnd("request-response-time"))
-        next()
-    }
-}
+// @Injectable()
+// export class LoggingMiddleware implements NestMiddleware{
+//     use(req: any, res: any, next: (error?: any) => void) {
+//         console.time("request-response-time")
+//         console.log("hi from middleware")
+//         res.on('finish',()=> console.timeEnd("request-response-time"))
+//         next()
+//     }
+// }
